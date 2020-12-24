@@ -27,7 +27,7 @@ namespace Pathfinding.Algorithms
             var start = new Node(startv, 0);
             openSet.Enqueue(start, 0);
             start.GScore = 0;
-            start.fScore = 0;
+            start.FScore = 0;
             while (!openSet.IsEmpty)
             {
                 var current = openSet.Dequeue();
@@ -44,10 +44,10 @@ namespace Pathfinding.Algorithms
                     {
                         neighbour.Parent = current;
                         neighbour.GScore = tentativeGScore;
-                        neighbour.fScore = neighbour.GScore + costHeuristic(current.Position, neighbour.Position);
+                        neighbour.FScore = neighbour.GScore + costHeuristic(current.Position, neighbour.Position);
                         if (!openSet.Contains(neighbour))
                         {
-                            openSet.Enqueue(neighbour, neighbour.fScore);
+                            openSet.Enqueue(neighbour, neighbour.FScore);
                         }
                     }
                 }

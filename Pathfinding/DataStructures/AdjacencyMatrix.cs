@@ -21,17 +21,12 @@ namespace Pathfinding.DataStructures
             return connectedNodes.Single(x => x == to).Cost;
         }
 
-        public void Add(Vertex2D node, Node neighbour)
+        public void Add(Vertex2D position, Node neighbour)
         {
-            if (!graph.ContainsKey(node))
-            {
-                graph.Add(node, new List<Node>() { neighbour });
-                return;
-            }
+            if (graph.ContainsKey(position))
+                graph[position].Add(neighbour);
             else
-            {
-                graph[node].Add(neighbour);
-            }
+                graph.Add(position, new List<Node>() { neighbour });
         }
     }
 }
