@@ -21,39 +21,34 @@ namespace Pathfinding.Algorithms
             costHeuristic = heuristic;
         }
 
-        public List<Vertex2D> GetPath(Vertex2D start, Vertex2D goal)
+        public List<Vertex2D> GetPath(Vertex2D startv, Vertex2D goalv)
         {
-            var openSet = new PriorityQueueSortedList<Vertex2D>();
+            var openSet = new PriorityQueueSortedList<Node>();
+            var start = new Node(startv, 0);
+            var goal = new Node(goalv, 0);
             openSet.Enqueue(start, 0);
-            var cameFrom = new Dictionary<Vertex2D, Vertex2D>();
-            var gScore = new Dictionary<Vertex2D, int>();
-            gScore.Add(start, 0);
-            var fScore = new Dictionary<Vertex2D, int>();
-            fScore.Add(start, 0);
+            start.GScore = 0;
+            start.fScore = 0;
             while (!openSet.IsEmpty)
             {
                 var current = openSet.Dequeue();
 
-                if (current.Equals(goal))
+                if (current.Position.Equals(goalv))
                 {
-                    return ReconstructPath(cameFrom, current);
+                    return ReconstructPath(current);
                 }
 
-                foreach (var neighbour in weightedGraph.GetNeighbours(current))
+                foreach (var neighbour in weightedGraph.GetNeighbours(current.Position))
                 {
-                    var tentativeGScore = gScore[current] + weightedGraph.GetCost(current, neighbour);
-                    if (!gScore.ContainsKey(neighbour.Vertex))
+                    var tentativeGScore = current.GScore + neighbour.Cost;
+                    if (tentativeGScore < neighbour.GScore)
                     {
-                        gScore.Add(neighbour.Vertex, int.MaxValue);
-                    }
-                    if (tentativeGScore < gScore[neighbour.Vertex])
-                    {
-                        cameFrom[neighbour.Vertex] = current;
-                        gScore[neighbour.Vertex] = tentativeGScore;
-                        fScore[neighbour.Vertex] = gScore[neighbour.Vertex] + costHeuristic(current, neighbour.Vertex);
-                        if (!openSet.Contains(neighbour.Vertex))
+                        neighbour.Parent = current;
+                        neighbour.GScore = tentativeGScore;
+                        neighbour.fScore = neighbour.GScore + costHeuristic(current.Position, neighbour.Position);
+                        if (!openSet.Contains(neighbour))
                         {
-                            openSet.Enqueue(neighbour.Vertex, fScore[neighbour.Vertex]);
+                            openSet.Enqueue(neighbour, neighbour.fScore);
                         }
                     }
                 }
@@ -62,14 +57,16 @@ namespace Pathfinding.Algorithms
             throw new NoPathFoundException();
         }
 
-        private List<Vertex2D> ReconstructPath(Dictionary<Vertex2D, Vertex2D> cameFrom, Vertex2D current)
+        private List<Vertex2D> ReconstructPath(Node current)
         {
-            var totalPath = new List<Vertex2D>();
-            totalPath.Add(current);
-            while (cameFrom.ContainsKey(current))
+            var totalPath = new List<Vertex2D>
             {
-                current = cameFrom[current];
-                totalPath.Add(current);
+                current.Position
+            };
+            while (current.Parent != null)
+            {
+                totalPath.Add(current.Parent.Position);
+                current = current.Parent;
             }
             return totalPath;
         }
