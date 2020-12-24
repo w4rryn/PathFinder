@@ -35,5 +35,10 @@ namespace Pathfinding.DataStructures
             queue.Add(new Cell(item, priority));
             queue = queue.OrderBy(x => x.Priority).ToList();
         }
+
+        public bool Contains(T item)
+        {
+            return queue.Any(x => x.Payload.Equals(item));
+        }
     }
 }

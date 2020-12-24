@@ -10,9 +10,9 @@ namespace Pathfinding.DataStructures
     {
         private readonly Dictionary<Vertex2D, List<Node>> graph = new Dictionary<Vertex2D, List<Node>>();
         
-        public List<Node> GetNeighbours(Vertex2D vertex)
+        public List<Node> GetNeighbours(Vertex2D node)
         {
-            return graph[vertex];
+            return graph[node];
         }
 
         public int GetCost(Vertex2D from, Node to)
@@ -21,16 +21,16 @@ namespace Pathfinding.DataStructures
             return connectedNodes.Single(x => x == to).Cost;
         }
 
-        public void Add(Vertex2D vertex, Node node)
+        public void Add(Vertex2D node, Node neighbour)
         {
-            if (!graph.ContainsKey(vertex))
+            if (!graph.ContainsKey(node))
             {
-                graph.Add(vertex, new List<Node>() { node });
+                graph.Add(node, new List<Node>() { neighbour });
                 return;
             }
             else
             {
-                graph[vertex].Add(node);
+                graph[node].Add(neighbour);
             }
         }
     }

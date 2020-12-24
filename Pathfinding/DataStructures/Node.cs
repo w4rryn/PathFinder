@@ -1,4 +1,6 @@
-﻿namespace Pathfinding.DataStructures
+﻿using System.Collections.Generic;
+
+namespace Pathfinding.DataStructures
 {
     public class Node
     {
