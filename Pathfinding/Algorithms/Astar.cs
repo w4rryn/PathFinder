@@ -1,19 +1,15 @@
 ﻿using Pathfinding.DataStructures;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Runtime.Serialization;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Pathfinding.Algorithms
 {
     public class Astar : IPathfinder
     {
         private readonly HeuristicCalculator costHeuristic;
+        private readonly PriorityQueueSortedList<Node> openSet = new PriorityQueueSortedList<Node>();
         private readonly IWeightedGraph weightedGraph;
-
-        public delegate int HeuristicCalculator(Vertex2D currentLocation, Vertex2D goalLocation);
 
         public Astar(IWeightedGraph graph, HeuristicCalculator heuristic)
         {
@@ -21,53 +17,82 @@ namespace Pathfinding.Algorithms
             costHeuristic = heuristic;
         }
 
-        public List<Vertex2D> GetPath(Vertex2D startv, Vertex2D goalv)
+        public delegate int HeuristicCalculator(Node currentLocation, Node goalLocation);
+
+        public List<Vertex2D> GetPath(Node start, Vertex2D goal)
         {
-            var openSet = new PriorityQueueSortedList<Node>();
-            var start = new Node(startv, 0);
-            openSet.Enqueue(start, 0);
-            start.GScore = 0;
-            start.FScore = 0;
+            PrepareStartNodeAndAddToQueue(start);
             while (!openSet.IsEmpty)
             {
-                var current = openSet.Dequeue();
-
-                if (current.Position.Equals(goalv))
-                {
-                    return ReconstructPath(current);
-                }
-
-                foreach (var neighbour in weightedGraph.GetNeighbours(current.Position))
-                {
-                    var tentativeGScore = current.GScore + neighbour.Cost;
-                    if (tentativeGScore < neighbour.GScore)
-                    {
-                        neighbour.Parent = current;
-                        neighbour.GScore = tentativeGScore;
-                        neighbour.FScore = neighbour.GScore + costHeuristic(current.Position, neighbour.Position);
-                        if (!openSet.Contains(neighbour))
-                        {
-                            openSet.Enqueue(neighbour, neighbour.FScore);
-                        }
-                    }
-                }
+                var currentNode = openSet.Dequeue();
+                if (IsCurrentNodeAtGoalPosition(goal, currentNode))
+                    return ReconstructPathWithNodeParents(currentNode);
+                EvaluateNeighbours(currentNode);
             }
 
             throw new NoPathFoundException();
         }
 
-        private List<Vertex2D> ReconstructPath(Node current)
+        private bool IsCurrentNodeAtGoalPosition(Vertex2D goalv, Node current)
         {
-            var totalPath = new List<Vertex2D>
+            return current.Position.Equals(goalv);
+        }
+
+        private bool IsCurrentNodeParentNotNull(Node current)
+        {
+            return current.Parent != null;
+        }
+
+        private bool IsNeighbourWithLowestCost(Node neighbour, int stepCost)
+        {
+            return stepCost < neighbour.GScore;
+        }
+
+        private void EvaluateNeighbours(Node current)
+        {
+            foreach (var neighbour in weightedGraph.GetNeighbours(current.Position))
+                FindNeighbourWithLowestCost(current, neighbour);
+        }
+
+        private void FindNeighbourWithLowestCost(Node current, Node neighbour)
+        {
+            var stepCost = current.GScore + neighbour.Cost;
+            if (IsNeighbourWithLowestCost(neighbour, stepCost))
             {
-                current.Position
-            };
-            while (current.Parent != null)
+                SetNewNeighbourValues(current, neighbour, stepCost);
+                AddNeighbourToQueue(neighbour);
+            }
+        }
+
+        private void PrepareStartNodeAndAddToQueue(Node start)
+        {
+            start.GScore = 0;
+            start.FScore = 0;
+            openSet.Enqueue(start, 0);
+        }
+
+        private List<Vertex2D> ReconstructPathWithNodeParents(Node current)
+        {
+            var totalPath = new List<Vertex2D> { current.Position };
+            while (IsCurrentNodeParentNotNull(current))
             {
                 totalPath.Add(current.Parent.Position);
                 current = current.Parent;
             }
             return totalPath;
+        }
+
+        private void SetNewNeighbourValues(Node current, Node neighbour, int tentativeGScore)
+        {
+            neighbour.Parent = current;
+            neighbour.GScore = tentativeGScore;
+            neighbour.FScore = neighbour.GScore + costHeuristic(current, neighbour);
+        }
+
+        private void AddNeighbourToQueue(Node neighbour)
+        {
+            if (!openSet.Contains(neighbour))
+                openSet.Enqueue(neighbour, neighbour.FScore);
         }
     }
 

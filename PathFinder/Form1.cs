@@ -138,7 +138,7 @@ namespace PathFinderGUI
         {
             var graph = gridMaze.GetWeightedGraph();
             var star = new Astar(graph, ManhattanDistanceHeuristic);
-            var path = star.GetPath(startCell, targetCell);
+            var path = star.GetPath(new Node(startCell, 0), targetCell);
             ColorPath(path);
         }
 
@@ -150,9 +150,9 @@ namespace PathFinderGUI
             }
         }
 
-        private int ManhattanDistanceHeuristic(Vertex2D currentLocation, Vertex2D goalLocation)
+        private int ManhattanDistanceHeuristic(Node currentLocation, Node goalLocation)
         {
-            return Math.Abs(currentLocation.X - goalLocation.X) + Math.Abs(currentLocation.Y - goalLocation.Y);
+            return Math.Abs(currentLocation.Position.X - goalLocation.Position.X) + Math.Abs(currentLocation.Position.Y - goalLocation.Position.Y);
         }
     }
 }
