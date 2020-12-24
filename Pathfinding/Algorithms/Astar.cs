@@ -25,7 +25,6 @@ namespace Pathfinding.Algorithms
         {
             var openSet = new PriorityQueueSortedList<Node>();
             var start = new Node(startv, 0);
-            var goal = new Node(goalv, 0);
             openSet.Enqueue(start, 0);
             start.GScore = 0;
             start.fScore = 0;
