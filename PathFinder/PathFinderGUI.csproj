@@ -83,5 +83,11 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Pathfinding\Pathfinding.csproj">
+      <Project>{C1CC818E-8783-417A-A0B6-876A0095A062}</Project>
+      <Name>Pathfinding</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -43,9 +43,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Astar.cs" />
-    <Compile Include="DataStructures\PriorityQueue.cs" />
-    <Compile Include="Node.cs" />
+    <Compile Include="Algorithms\Astar.cs" />
+    <Compile Include="DataStructures\IPriorityQueue.cs" />
+    <Compile Include="DataStructures\IWeightedGraph.cs" />
+    <Compile Include="DataStructures\Node.cs" />
+    <Compile Include="DataStructures\PriorityQueueSortedList.cs" />
+    <Compile Include="DataStructures\AdjacencyMatrix.cs" />
+    <Compile Include="DataStructures\Vertex2D.cs" />
+    <Compile Include="Algorithms\IPathfinder.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -1,21 +1,23 @@
-﻿using System;
+﻿using Pathfinding.DataStructures;
+using System;
+using System.Collections.Generic;
 using System.Drawing;
-using System.Numerics;
 using System.Windows.Forms;
 
 namespace PathFinderGUI
 {
     public struct PanelGridContext
     {
-        public Action<MouseEventArgs, Vector2> CellClickEventHandler;
+        public Action<MouseEventArgs, Vertex2D> CellClickEventHandler;
         public int GridSize;
         public int Height;
         public int Width;
+        public Func<Panel, bool> IsWall;
     }
 
     public class PanelGrid : Panel
     {
-        private readonly PanelGridContext context;
+        public PanelGridContext Context { get; }
         private readonly Color defaultPanelBackgroundColor = Color.White;
         private readonly int tileSizeX;
         private readonly int tileSizeY;
@@ -24,23 +26,23 @@ namespace PathFinderGUI
 
         public PanelGrid(PanelGridContext ctx)
         {
-            context = ctx;
+            Context = ctx;
             tileSizeX = ctx.Width / ctx.GridSize;
             tileSizeY = ctx.Height / ctx.GridSize;
             InitializeGrid();
         }
 
-        public Color GetCellColorByPosition(Vector2 pos)
+        public Color GetCellColorByPosition(Vertex2D pos)
         {
-            return BoardCells[(int)pos.X, (int)pos.Y].BackColor;
+            return BoardCells[pos.X, pos.Y].BackColor;
         }
 
-        public bool IsPositionOffGrid(Vector2 pos)
+        public bool IsPositionOffGrid(Vertex2D pos)
         {
             return pos.X < 0 || pos.X >= BoardCells.GetLength(0) || pos.Y < 0 || pos.Y >= BoardCells.GetLength(1);
         }
 
-        public void SetCellColorAtPosition(Vector2 pos, Color color)
+        public void SetCellColorAtPosition(Vertex2D pos, Color color)
         {
             BoardCells[(int)pos.X, (int)pos.Y].BackColor = color;
         }
@@ -61,42 +63,96 @@ namespace PathFinderGUI
 
         private void CreatePanelGrid()
         {
-            for (var y = 0; y < context.GridSize; y++)
-                for (var x = 0; x < context.GridSize; x++)
+            for (var y = 0; y < Context.GridSize; y++)
+                for (var x = 0; x < Context.GridSize; x++)
                     CreateAndAddPanelToBoard(new Point(x, y));
         }
 
-        private Vector2 GetCoordinatesOfCell(Panel value)
+        private Vertex2D GetCoordinatesOfCell(Panel value)
         {
-            for (var x = 0; x < context.GridSize; x++)
+            for (var x = 0; x < Context.GridSize; x++)
             {
-                for (var y = 0; y < context.GridSize; y++)
+                for (var y = 0; y < Context.GridSize; y++)
                 {
                     if (BoardCells[x, y].Equals(value))
-                        return new Vector2 { X = x, Y = y };
+                        return new Vertex2D(x, y);
                 }
             }
-            return new Vector2 { X = -1, Y = -1 };
+            return new Vertex2D(-1, -1);
         }
 
         private void InitializeGrid()
         {
-            BoardCells = new Panel[context.GridSize, context.GridSize];
+            BoardCells = new Panel[Context.GridSize, Context.GridSize];
             CreatePanelGrid();
-            Width = context.Width;
-            Height = context.Height;
+            Width = Context.Width;
+            Height = Context.Height;
         }
 
         private void OnPanelClick(object sender, EventArgs e)
         {
             var panelPosition = GetCoordinatesOfCell(sender as Panel);
-            context.CellClickEventHandler?.Invoke(e as MouseEventArgs, panelPosition);
+            Context.CellClickEventHandler?.Invoke(e as MouseEventArgs, panelPosition);
         }
 
         private void PanelToBoard(Point position, Panel newPanel)
         {
             Controls.Add(newPanel);
             BoardCells[position.X, position.Y] = newPanel;
+        }
+
+        public IWeightedGraph GetWeightedGraph()
+        {
+            var graph = new AdjacencyMatrix();
+            for (var x = 0; x < Context.GridSize; x++)
+            {
+                for (var y = 0; y < Context.GridSize; y++)
+                {
+                    if (Context.IsWall(BoardCells[x,y]))
+                    {
+                        continue;
+                    }
+                    var neighbours = GetLocationNeighbours(new Vertex2D(x, y));
+                    foreach (var element in neighbours)
+                    {
+                        graph.Add(new Vertex2D(x, y), new Node(element, 1));
+                    }
+                }
+            }
+            return graph;
+        }
+
+        private List<Vertex2D> GetLocationNeighbours(Vertex2D location)
+        {
+            var neighbours = new List<Vertex2D>();
+            List<Vertex2D> directions = new List<Vertex2D>()
+            {
+                new Vertex2D(0, -1),
+                new Vertex2D(0, 1),
+                new Vertex2D(-1, 0),
+                new Vertex2D(1, 0),
+            };
+
+            foreach (var dir in directions)
+            {
+                var newPosition = location.Sum(dir);
+                if (IsPositionOnGrid(newPosition) && IsPositionNoWall(newPosition))
+                {
+                    neighbours.Add(newPosition);
+                }
+            }
+
+            return neighbours;
+        }
+
+        private bool IsPositionNoWall(Vertex2D newPosition)
+        {
+            return !Context.IsWall(BoardCells[newPosition.X, newPosition.Y]);
+        }
+
+        public bool IsPositionOnGrid(Vertex2D newPosition)
+        {
+            return !IsPositionOffGrid(newPosition);
         }
     }
 }
