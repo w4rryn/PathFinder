@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
 
-namespace PathFinderGUI
+namespace PathFinder
 {
     public struct PanelGridContext
     {
@@ -15,11 +15,12 @@ namespace PathFinderGUI
         public int Width;
     }
 
-    public class PanelGrid : Panel
+    public partial class PanelGrid : UserControl
     {
         private readonly Color defaultPanelBackgroundColor = Color.White;
         private readonly int tileSizeX;
         private readonly int tileSizeY;
+
         public PanelGrid(PanelGridContext ctx)
         {
             Context = ctx;
@@ -29,7 +30,9 @@ namespace PathFinderGUI
         }
 
         public Panel[,] BoardCells { get; private set; }
+        
         public PanelGridContext Context { get; }
+        
         public Color GetCellColorByPosition(Vertex2D pos)
         {
             return BoardCells[pos.X, pos.Y].BackColor;
@@ -43,18 +46,19 @@ namespace PathFinderGUI
                 for (var y = 0; y < Context.GridSize; y++)
                 {
                     if (Context.IsWall(BoardCells[x, y]))
-                    {
                         continue;
-                    }
-                    var neighbours = GetLocationNeighbours(new Vertex2D(x, y));
-                    foreach (var element in neighbours)
-                    {
-                        var pos = new Vertex2D(x, y);
-                        graph.Add(pos, new Node<Vertex2D>(element, 1));
-                    }
+                    AddNeighboursToGraph(graph, x, y);
                 }
             }
             return graph;
+        }
+
+        private void AddNeighboursToGraph(AdjacencyList<Vertex2D> graph, int x, int y)
+        {
+            var pos = new Vertex2D(x, y);
+            var neighbours = GetLocationNeighbours(pos);
+            foreach (var element in neighbours)
+                graph.Add(pos, new Node<Vertex2D>(element, 1));
         }
 
         public bool IsPositionOffGrid(Vertex2D pos)
@@ -69,7 +73,7 @@ namespace PathFinderGUI
 
         public void SetCellColorAtPosition(Vertex2D pos, Color color)
         {
-            BoardCells[(int)pos.X, (int)pos.Y].BackColor = color;
+            BoardCells[pos.X, pos.Y].BackColor = color;
         }
 
         private void CreateAndAddPanelToBoard(Point position)

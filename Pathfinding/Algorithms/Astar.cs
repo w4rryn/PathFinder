@@ -45,7 +45,7 @@ namespace Pathfinding.Algorithms
 
         private bool IsNeighbourWithLowestCost(Node<T> neighbour, int stepCost)
         {
-            return stepCost < neighbour.GScore;
+            return stepCost < neighbour.PathCostFromStart;
         }
 
         private void EvaluateNeighbours(Node<T> current)
@@ -56,7 +56,7 @@ namespace Pathfinding.Algorithms
 
         private void FindNeighbourWithLowestCost(Node<T> current, Node<T> neighbour)
         {
-            var stepCost = current.GScore + neighbour.Cost;
+            var stepCost = current.PathCostFromStart + neighbour.Cost;
             if (IsNeighbourWithLowestCost(neighbour, stepCost))
             {
                 SetNewNeighbourValues(current, neighbour, stepCost);
@@ -66,8 +66,8 @@ namespace Pathfinding.Algorithms
 
         private void PrepareStartNodeAndAddToQueue(Node<T> start)
         {
-            start.GScore = 0;
-            start.FScore = 0;
+            start.PathCostFromStart = 0;
+            start.PathCost = 0;
             openSet.Enqueue(start, 0);
         }
 
@@ -85,14 +85,14 @@ namespace Pathfinding.Algorithms
         private void SetNewNeighbourValues(Node<T> current, Node<T> neighbour, int tentativeGScore)
         {
             neighbour.Parent = current;
-            neighbour.GScore = tentativeGScore;
-            neighbour.FScore = neighbour.GScore + costHeuristic(current, neighbour);
+            neighbour.PathCostFromStart = tentativeGScore;
+            neighbour.PathCost = neighbour.PathCostFromStart + costHeuristic(current, neighbour);
         }
 
         private void AddNeighbourToOpenSet(Node<T> neighbour)
         {
             if (!openSet.Contains(neighbour))
-                openSet.Enqueue(neighbour, neighbour.FScore);
+                openSet.Enqueue(neighbour, neighbour.PathCost);
         }
     }
 

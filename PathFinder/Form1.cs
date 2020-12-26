@@ -1,11 +1,10 @@
-﻿using Pathfinding;
+﻿using PathFinder;
 using Pathfinding.Algorithms;
 using Pathfinding.DataStructures;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
-using System.Numerics;
 using System.Windows.Forms;
 
 namespace PathFinderGUI

@@ -12,8 +12,8 @@ namespace Pathfinding.DataStructures
 
         public T Position { get; }
         public int Cost { get; }
-        public int GScore { get; internal set; } = int.MaxValue;
-        public int FScore { get; internal set; } = 0;
+        public int PathCostFromStart { get; internal set; } = int.MaxValue;
+        public int PathCost { get; internal set; } = 0;
         public Node<T> Parent { get; internal set; }
     }
 }

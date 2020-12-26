@@ -54,7 +54,10 @@
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
     <Compile Include="PanelGrid.cs">
-      <SubType>Component</SubType>
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="PanelGrid.Designer.cs">
+      <DependentUpon>PanelGrid.cs</DependentUpon>
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
