@@ -3,8 +3,8 @@ using System.Collections.Generic;
 
 namespace Pathfinding.Algorithms
 {
-    public interface IPathfinder
+    public interface IPathfinder<T>
     {
-        List<Vertex2D> GetPath(Node start, Vertex2D goal);
+        List<T> GetPath(Node<T> start, T goal);
     }
 }

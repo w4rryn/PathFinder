@@ -2,18 +2,18 @@
 
 namespace Pathfinding.DataStructures
 {
-    public class Node
+    public class Node <T>
     {
-        public Node(Vertex2D position, int cost)
+        public Node(T position, int cost)
         {
             Position = position;
             Cost = cost;
         }
 
-        public Vertex2D Position { get; }
+        public T Position { get; }
         public int Cost { get; }
         public int GScore { get; internal set; } = int.MaxValue;
         public int FScore { get; internal set; } = 0;
-        public Node Parent { get; internal set; }
+        public Node<T> Parent { get; internal set; }
     }
 }

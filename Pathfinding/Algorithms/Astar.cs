@@ -5,21 +5,21 @@ using System.Runtime.Serialization;
 
 namespace Pathfinding.Algorithms
 {
-    public class Astar : IPathfinder
+    public class Astar<T> : IPathfinder<T>
     {
         private readonly HeuristicCalculator costHeuristic;
-        private readonly PriorityQueueSortedList<Node> openSet = new PriorityQueueSortedList<Node>();
-        private readonly IWeightedGraph weightedGraph;
+        private readonly PriorityQueueSortedList<Node<T>> openSet = new PriorityQueueSortedList<Node<T>>();
+        private readonly IWeightedGraph<T> weightedGraph;
 
-        public Astar(IWeightedGraph graph, HeuristicCalculator heuristic)
+        public Astar(IWeightedGraph<T> graph, HeuristicCalculator heuristic)
         {
             weightedGraph = graph;
             costHeuristic = heuristic;
         }
 
-        public delegate int HeuristicCalculator(Node currentLocation, Node goalLocation);
+        public delegate int HeuristicCalculator(Node<T> currentLocation, Node<T> goalLocation);
 
-        public List<Vertex2D> GetPath(Node start, Vertex2D goal)
+        public List<T> GetPath(Node<T> start, T goal)
         {
             PrepareStartNodeAndAddToQueue(start);
             while (!openSet.IsEmpty)
@@ -33,28 +33,28 @@ namespace Pathfinding.Algorithms
             throw new NoPathFoundException(); // throw exception when no path was found
         }
 
-        private bool IsCurrentNodeAtGoalPosition(Vertex2D goalv, Node current)
+        private bool IsCurrentNodeAtGoalPosition(T goalv, Node<T> current)
         {
             return current.Position.Equals(goalv);
         }
 
-        private bool IsCurrentNodeParentNotNull(Node current)
+        private bool IsCurrentNodeParentNotNull(Node<T> current)
         {
             return current.Parent != null;
         }
 
-        private bool IsNeighbourWithLowestCost(Node neighbour, int stepCost)
+        private bool IsNeighbourWithLowestCost(Node<T> neighbour, int stepCost)
         {
             return stepCost < neighbour.GScore;
         }
 
-        private void EvaluateNeighbours(Node current)
+        private void EvaluateNeighbours(Node<T> current)
         {
             foreach (var neighbour in weightedGraph.GetNeighbours(current.Position))
                 FindNeighbourWithLowestCost(current, neighbour);
         }
 
-        private void FindNeighbourWithLowestCost(Node current, Node neighbour)
+        private void FindNeighbourWithLowestCost(Node<T> current, Node<T> neighbour)
         {
             var stepCost = current.GScore + neighbour.Cost;
             if (IsNeighbourWithLowestCost(neighbour, stepCost))
@@ -64,16 +64,16 @@ namespace Pathfinding.Algorithms
             }
         }
 
-        private void PrepareStartNodeAndAddToQueue(Node start)
+        private void PrepareStartNodeAndAddToQueue(Node<T> start)
         {
             start.GScore = 0;
             start.FScore = 0;
             openSet.Enqueue(start, 0);
         }
 
-        private List<Vertex2D> ReconstructPathWithNodeParents(Node current)
+        private List<T> ReconstructPathWithNodeParents(Node<T> current)
         {
-            var totalPath = new List<Vertex2D> { current.Position };
+            var totalPath = new List<T> { current.Position };
             while (IsCurrentNodeParentNotNull(current))
             {
                 totalPath.Add(current.Parent.Position);
@@ -82,14 +82,14 @@ namespace Pathfinding.Algorithms
             return totalPath;
         }
 
-        private void SetNewNeighbourValues(Node current, Node neighbour, int tentativeGScore)
+        private void SetNewNeighbourValues(Node<T> current, Node<T> neighbour, int tentativeGScore)
         {
             neighbour.Parent = current;
             neighbour.GScore = tentativeGScore;
             neighbour.FScore = neighbour.GScore + costHeuristic(current, neighbour);
         }
 
-        private void AddNeighbourToOpenSet(Node neighbour)
+        private void AddNeighbourToOpenSet(Node<T> neighbour)
         {
             if (!openSet.Contains(neighbour))
                 openSet.Enqueue(neighbour, neighbour.FScore);

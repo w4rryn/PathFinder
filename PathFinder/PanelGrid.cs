@@ -35,9 +35,9 @@ namespace PathFinderGUI
             return BoardCells[pos.X, pos.Y].BackColor;
         }
 
-        public IWeightedGraph GetWeightedGraph()
+        public IWeightedGraph<Vertex2D> GetWeightedGraph()
         {
-            var graph = new AdjacencyMatrix();
+            var graph = new AdjacencyList<Vertex2D>();
             for (var x = 0; x < Context.GridSize; x++)
             {
                 for (var y = 0; y < Context.GridSize; y++)
@@ -50,7 +50,7 @@ namespace PathFinderGUI
                     foreach (var element in neighbours)
                     {
                         var pos = new Vertex2D(x, y);
-                        graph.Add(pos, new Node(element, 1));
+                        graph.Add(pos, new Node<Vertex2D>(element, 1));
                     }
                 }
             }

@@ -2,10 +2,10 @@
 
 namespace Pathfinding.DataStructures
 {
-    public interface IWeightedGraph
+    public interface IWeightedGraph<T>
     {
-        int GetCost(Vertex2D from, Node to);
-        List<Node> GetNeighbours(Vertex2D node);
-        void Add(Vertex2D node, Node neighbour);
+        int GetCost(T from, Node<T> to);
+        List<Node<T>> GetNeighbours(T node);
+        void Add(T node, Node<T> neighbour);
     }
 }

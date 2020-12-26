@@ -48,7 +48,7 @@
     <Compile Include="DataStructures\IWeightedGraph.cs" />
     <Compile Include="DataStructures\Node.cs" />
     <Compile Include="DataStructures\PriorityQueueSortedList.cs" />
-    <Compile Include="DataStructures\AdjacencyMatrix.cs" />
+    <Compile Include="DataStructures\AdjacencyList.cs" />
     <Compile Include="DataStructures\Vertex2D.cs" />
     <Compile Include="Algorithms\IPathfinder.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

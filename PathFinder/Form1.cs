@@ -4,6 +4,7 @@ using Pathfinding.DataStructures;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Linq;
 using System.Numerics;
 using System.Windows.Forms;
 
@@ -137,9 +138,10 @@ namespace PathFinderGUI
         private void OnButtonStartSearchClick(object sender, EventArgs e)
         {
             var graph = gridMaze.GetWeightedGraph();
-            var star = new Astar(graph, ManhattanDistanceHeuristic);
-            var path = star.GetPath(new Node(startCell, 0), targetCell);
-            RenderGeneratedPath(path);
+            var star = new Astar<Vertex2D>(graph, ManhattanDistanceHeuristic);
+            var path = star.GetPath(new Node<Vertex2D>(startCell, 0), targetCell);
+            var path2 = path.Select(x => x as Vertex2D).ToList();
+            RenderGeneratedPath(path2);
         }
 
         private void RenderGeneratedPath(List<Vertex2D> path)
@@ -150,9 +152,11 @@ namespace PathFinderGUI
             }
         }
 
-        private int ManhattanDistanceHeuristic(Node currentLocation, Node goalLocation)
+        private int ManhattanDistanceHeuristic(Node<Vertex2D> currentLocation, Node<Vertex2D> goalLocation)
         {
-            return Math.Abs(currentLocation.Position.X - goalLocation.Position.X) + Math.Abs(currentLocation.Position.Y - goalLocation.Position.Y);
+            var goal = goalLocation.Position as Vertex2D;
+            var current = currentLocation.Position as Vertex2D;
+            return Math.Abs(current.X - goal.X) + Math.Abs(current.Y - goal.Y);
         }
     }
 }
