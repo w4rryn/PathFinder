@@ -30,7 +30,7 @@ namespace Pathfinding.Algorithms
                 EvaluateNeighbours(currentNode);
             }
 
-            throw new NoPathFoundException();
+            throw new NoPathFoundException(); // throw exception when no path was found
         }
 
         private bool IsCurrentNodeAtGoalPosition(Vertex2D goalv, Node current)
@@ -60,7 +60,7 @@ namespace Pathfinding.Algorithms
             if (IsNeighbourWithLowestCost(neighbour, stepCost))
             {
                 SetNewNeighbourValues(current, neighbour, stepCost);
-                AddNeighbourToQueue(neighbour);
+                AddNeighbourToOpenSet(neighbour);
             }
         }
 
@@ -89,7 +89,7 @@ namespace Pathfinding.Algorithms
             neighbour.FScore = neighbour.GScore + costHeuristic(current, neighbour);
         }
 
-        private void AddNeighbourToQueue(Node neighbour)
+        private void AddNeighbourToOpenSet(Node neighbour)
         {
             if (!openSet.Contains(neighbour))
                 openSet.Enqueue(neighbour, neighbour.FScore);

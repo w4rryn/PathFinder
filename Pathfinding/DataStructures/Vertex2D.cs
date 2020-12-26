@@ -1,5 +1,10 @@
 ﻿namespace Pathfinding.DataStructures
 {
+    public interface INodeComparer
+    {
+
+    }
+
     public class Vertex2D
     {
         public int X { get; }

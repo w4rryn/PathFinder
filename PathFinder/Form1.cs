@@ -15,7 +15,7 @@ namespace PathFinderGUI
         private readonly Dictionary<CellStates, Color> stateModeColorMap = new Dictionary<CellStates, Color>
         {
             {CellStates.empty, Color.White },
-            {CellStates.obstacle, Color.Red },
+            {CellStates.obstacle, Color.Black },
             {CellStates.start, Color.Green },
             {CellStates.target, Color.Blue },
         };
@@ -139,10 +139,10 @@ namespace PathFinderGUI
             var graph = gridMaze.GetWeightedGraph();
             var star = new Astar(graph, ManhattanDistanceHeuristic);
             var path = star.GetPath(new Node(startCell, 0), targetCell);
-            ColorPath(path);
+            RenderGeneratedPath(path);
         }
 
-        private void ColorPath(List<Vertex2D> path)
+        private void RenderGeneratedPath(List<Vertex2D> path)
         {
             foreach (var pos in path)
             {
