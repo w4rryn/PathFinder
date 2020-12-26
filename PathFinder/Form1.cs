@@ -11,7 +11,7 @@ namespace PathFinderGUI
 {
     public partial class Form1 : Form
     {
-        private readonly PanelGrid gridMaze;
+        private PanelGrid gridMaze;
         private readonly Dictionary<CellStates, Color> stateModeColorMap = new Dictionary<CellStates, Color>
         {
             {CellStates.empty, Color.White },
@@ -26,6 +26,11 @@ namespace PathFinderGUI
         public Form1()
         {
             InitializeComponent();
+            InitializeGridMaze();
+        }
+
+        private void InitializeGridMaze()
+        {
             var ctx = new PanelGridContext
             {
                 GridSize = 12,
@@ -35,6 +40,7 @@ namespace PathFinderGUI
                 IsWall = CheckIfCellIsWall,
             };
             gridMaze = new PanelGrid(ctx);
+            board.Controls.Clear();
             board.Controls.Add(gridMaze);
         }
 
@@ -136,19 +142,25 @@ namespace PathFinderGUI
 
         private void OnButtonStartSearchClick(object sender, EventArgs e)
         {
-            var graph = gridMaze.GetWeightedGraph();
-            var star = new Astar<Vertex2D>(graph, ManhattanDistanceHeuristic);
-            var path = star.GetPath(new Node<Vertex2D>(startCell, 0), targetCell);
-            var path2 = path.Select(x => x as Vertex2D).ToList();
-            RenderGeneratedPath(path2);
+            try
+            {
+                var graph = gridMaze.GetWeightedGraph();
+                var star = new Astar<Vertex2D>(graph, ManhattanDistanceHeuristic);
+                var path = star.GetPath(new Node<Vertex2D>(startCell, 0), targetCell);
+                RenderGeneratedPath(path);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+
+            btn_startSearch.Enabled = false;
         }
 
         private void RenderGeneratedPath(List<Vertex2D> path)
         {
             foreach (var pos in path)
-            {
                 gridMaze.SetCellColorAtPosition(pos, Color.Yellow);
-            }
         }
 
         private int ManhattanDistanceHeuristic(Node<Vertex2D> currentLocation, Node<Vertex2D> goalLocation)
@@ -156,6 +168,12 @@ namespace PathFinderGUI
             var goal = goalLocation.Position as Vertex2D;
             var current = currentLocation.Position as Vertex2D;
             return Math.Abs(current.X - goal.X) + Math.Abs(current.Y - goal.Y);
+        }
+
+        private void OnResetButtonClick(object sender, EventArgs e)
+        {
+            btn_startSearch.Enabled = true;
+            InitializeGridMaze();
         }
     }
 }

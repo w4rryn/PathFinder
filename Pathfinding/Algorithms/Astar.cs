@@ -30,7 +30,7 @@ namespace Pathfinding.Algorithms
                 EvaluateNeighbours(currentNode);
             }
 
-            throw new NoPathFoundException(); // throw exception when no path was found
+            throw new NoPathFoundException("No valid path found");
         }
 
         private bool IsCurrentNodeAtGoalPosition(T goalv, Node<T> current)

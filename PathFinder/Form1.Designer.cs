@@ -34,6 +34,7 @@
             this.radio_obstacle = new System.Windows.Forms.RadioButton();
             this.btn_startSearch = new System.Windows.Forms.Button();
             this.board = new System.Windows.Forms.Panel();
+            this.button1 = new System.Windows.Forms.Button();
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -83,7 +84,7 @@
             // 
             // btn_startSearch
             // 
-            this.btn_startSearch.Location = new System.Drawing.Point(518, 399);
+            this.btn_startSearch.Location = new System.Drawing.Point(518, 107);
             this.btn_startSearch.Name = "btn_startSearch";
             this.btn_startSearch.Size = new System.Drawing.Size(75, 23);
             this.btn_startSearch.TabIndex = 3;
@@ -98,11 +99,22 @@
             this.board.Size = new System.Drawing.Size(500, 500);
             this.board.TabIndex = 5;
             // 
+            // button1
+            // 
+            this.button1.Location = new System.Drawing.Point(599, 107);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(75, 23);
+            this.button1.TabIndex = 6;
+            this.button1.Text = "Reset";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.OnResetButtonClick);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(699, 524);
+            this.Controls.Add(this.button1);
             this.Controls.Add(this.board);
             this.Controls.Add(this.btn_startSearch);
             this.Controls.Add(this.groupBox1);
@@ -121,6 +133,7 @@
         private System.Windows.Forms.RadioButton radio_start;
         private System.Windows.Forms.RadioButton radio_target;
         private System.Windows.Forms.RadioButton radio_obstacle;
+        private System.Windows.Forms.Button button1;
     }
 }
 

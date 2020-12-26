@@ -8,20 +8,14 @@ namespace Pathfinding.DataStructures
 {
     public class PriorityQueueSortedList<T> : IPriorityQueue<T>
     {
-        private struct Cell
-        {
-            public readonly T Payload;
-            public readonly int Priority;
-
-            public Cell(T payload, int priority)
-            {
-                Payload = payload;
-                Priority = priority;
-            }
-        }
-
         private List<Cell> queue = new List<Cell>();
+
         public bool IsEmpty => queue.Count == 0;
+
+        public bool Contains(T item)
+        {
+            return queue.Any(x => x.Payload.Equals(item));
+        }
 
         public T Dequeue()
         {
@@ -36,9 +30,16 @@ namespace Pathfinding.DataStructures
             queue = queue.OrderBy(x => x.Priority).ToList();
         }
 
-        public bool Contains(T item)
+        private struct Cell
         {
-            return queue.Any(x => x.Payload.Equals(item));
+            public readonly T Payload;
+            public readonly int Priority;
+
+            public Cell(T payload, int priority)
+            {
+                Payload = payload;
+                Priority = priority;
+            }
         }
     }
 }
