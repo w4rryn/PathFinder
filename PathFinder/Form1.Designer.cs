@@ -35,6 +35,7 @@
             this.btn_startSearch = new System.Windows.Forms.Button();
             this.board = new System.Windows.Forms.Panel();
             this.button1 = new System.Windows.Forms.Button();
+            this.btn_deletePath = new System.Windows.Forms.Button();
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -53,7 +54,7 @@
             // radio_start
             // 
             this.radio_start.AutoSize = true;
-            this.radio_start.Location = new System.Drawing.Point(6, 65);
+            this.radio_start.Location = new System.Drawing.Point(6, 42);
             this.radio_start.Name = "radio_start";
             this.radio_start.Size = new System.Drawing.Size(47, 17);
             this.radio_start.TabIndex = 2;
@@ -63,7 +64,7 @@
             // radio_target
             // 
             this.radio_target.AutoSize = true;
-            this.radio_target.Location = new System.Drawing.Point(6, 42);
+            this.radio_target.Location = new System.Drawing.Point(6, 65);
             this.radio_target.Name = "radio_target";
             this.radio_target.Size = new System.Drawing.Size(42, 17);
             this.radio_target.TabIndex = 1;
@@ -109,11 +110,22 @@
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.OnResetButtonClick);
             // 
+            // btn_deletePath
+            // 
+            this.btn_deletePath.Location = new System.Drawing.Point(518, 136);
+            this.btn_deletePath.Name = "btn_deletePath";
+            this.btn_deletePath.Size = new System.Drawing.Size(156, 23);
+            this.btn_deletePath.TabIndex = 7;
+            this.btn_deletePath.Text = "Pfad löschen";
+            this.btn_deletePath.UseVisualStyleBackColor = true;
+            this.btn_deletePath.Click += new System.EventHandler(this.OnDeletePathButtonClick);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(699, 524);
+            this.Controls.Add(this.btn_deletePath);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.board);
             this.Controls.Add(this.btn_startSearch);
@@ -134,6 +146,7 @@
         private System.Windows.Forms.RadioButton radio_target;
         private System.Windows.Forms.RadioButton radio_obstacle;
         private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Button btn_deletePath;
     }
 }
 

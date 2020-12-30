@@ -9,7 +9,7 @@ namespace Pathfinding.DataStructures
     public class AdjacencyList<T> : IWeightedGraph<T>
     {
         private readonly Dictionary<T, List<Node<T>>> graph = new Dictionary<T, List<Node<T>>>();
-        
+
         public List<Node<T>> GetNeighbours(T node)
         {
             return graph[node];
@@ -21,12 +21,17 @@ namespace Pathfinding.DataStructures
             return connectedNodes.Single(x => x == to).Cost;
         }
 
-        public void Add(T node, Node<T> neighbour)
+        public void AddNeighbour(T node, Node<T> neighbour)
         {
             if (graph.ContainsKey(node))
                 graph[node].Add(neighbour);
             else
                 graph.Add(node, new List<Node<T>>() { neighbour });
+        }
+
+        public void AddNode(T node)
+        {
+            graph.Add(node, new List<Node<T>>());
         }
     }
 }

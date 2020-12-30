@@ -22,18 +22,20 @@ namespace PathFinderGUI
 
         private Vertex2D startCell = new Vertex2D(-1, -1);
         private Vertex2D targetCell = new Vertex2D(-1, -1);
+        private List<Vertex2D> foundPath = new List<Vertex2D>();
 
         public Form1()
         {
             InitializeComponent();
             InitializeGridMaze();
+            btn_deletePath.Enabled = false;
         }
 
         private void InitializeGridMaze()
         {
             var ctx = new PanelGridContext
             {
-                GridSize = 12,
+                GridSize = 15,
                 Height = board.Height,
                 Width = board.Width,
                 CellClickEventHandler = OnCellClickEvent,
@@ -147,7 +149,8 @@ namespace PathFinderGUI
                 var graph = gridMaze.GetWeightedGraph();
                 var star = new Astar<Vertex2D>(graph, ManhattanDistanceHeuristic);
                 var path = star.GetPath(new Node<Vertex2D>(startCell, 0), targetCell);
-                RenderGeneratedPath(path);
+                foundPath = RemoveStartAndGoalFromPath(path);
+                RenderGeneratedPath();
             }
             catch (Exception ex)
             {
@@ -155,11 +158,19 @@ namespace PathFinderGUI
             }
 
             btn_startSearch.Enabled = false;
+            btn_deletePath.Enabled = true;
         }
 
-        private void RenderGeneratedPath(List<Vertex2D> path)
+        private List<Vertex2D> RemoveStartAndGoalFromPath(List<Vertex2D> path)
         {
-            foreach (var pos in path)
+            path.Remove(path.First());
+            path.Remove(path.Last());
+            return path;
+        }
+
+        private void RenderGeneratedPath()
+        {
+            foreach (var pos in foundPath)
                 gridMaze.SetCellColorAtPosition(pos, Color.Yellow);
         }
 
@@ -174,6 +185,16 @@ namespace PathFinderGUI
         {
             btn_startSearch.Enabled = true;
             InitializeGridMaze();
+        }
+
+        private void OnDeletePathButtonClick(object sender, EventArgs e)
+        {
+            foreach (var cell in foundPath)
+            {
+                gridMaze.SetCellColorAtPosition(cell, stateModeColorMap[CellStates.empty]);
+            }
+            btn_startSearch.Enabled = true;
+            btn_deletePath.Enabled = false;
         }
     }
 }

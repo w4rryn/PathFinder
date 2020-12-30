@@ -6,6 +6,7 @@ namespace Pathfinding.DataStructures
     {
         int GetCost(T from, Node<T> to);
         List<Node<T>> GetNeighbours(T node);
-        void Add(T node, Node<T> neighbour);
+        void AddNeighbour(T node, Node<T> neighbour);
+        void AddNode(T node);
     }
 }

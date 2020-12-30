@@ -55,10 +55,11 @@ namespace PathFinder
 
         private void AddNeighboursToGraph(AdjacencyList<Vertex2D> graph, int x, int y)
         {
-            var pos = new Vertex2D(x, y);
-            var neighbours = GetLocationNeighbours(pos);
+            var node = new Vertex2D(x, y);
+            var neighbours = GetLocationNeighbours(node);
+            graph.AddNode(node);
             foreach (var element in neighbours)
-                graph.Add(pos, new Node<Vertex2D>(element, 1));
+                graph.AddNeighbour(node, new Node<Vertex2D>(element, 1));
         }
 
         public bool IsPositionOffGrid(Vertex2D pos)
