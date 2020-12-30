@@ -36,11 +36,17 @@
             this.board = new System.Windows.Forms.Panel();
             this.button1 = new System.Windows.Forms.Button();
             this.btn_deletePath = new System.Windows.Forms.Button();
+            this.pan_start = new System.Windows.Forms.Panel();
+            this.pan_goal = new System.Windows.Forms.Panel();
+            this.pan_obstacle = new System.Windows.Forms.Panel();
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.pan_obstacle);
+            this.groupBox1.Controls.Add(this.pan_goal);
+            this.groupBox1.Controls.Add(this.pan_start);
             this.groupBox1.Controls.Add(this.radio_start);
             this.groupBox1.Controls.Add(this.radio_target);
             this.groupBox1.Controls.Add(this.radio_obstacle);
@@ -120,6 +126,27 @@
             this.btn_deletePath.UseVisualStyleBackColor = true;
             this.btn_deletePath.Click += new System.EventHandler(this.OnDeletePathButtonClick);
             // 
+            // pan_start
+            // 
+            this.pan_start.Location = new System.Drawing.Point(81, 42);
+            this.pan_start.Name = "pan_start";
+            this.pan_start.Size = new System.Drawing.Size(15, 17);
+            this.pan_start.TabIndex = 3;
+            // 
+            // pan_goal
+            // 
+            this.pan_goal.Location = new System.Drawing.Point(81, 66);
+            this.pan_goal.Name = "pan_goal";
+            this.pan_goal.Size = new System.Drawing.Size(15, 17);
+            this.pan_goal.TabIndex = 4;
+            // 
+            // pan_obstacle
+            // 
+            this.pan_obstacle.Location = new System.Drawing.Point(81, 19);
+            this.pan_obstacle.Name = "pan_obstacle";
+            this.pan_obstacle.Size = new System.Drawing.Size(15, 17);
+            this.pan_obstacle.TabIndex = 4;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -131,7 +158,7 @@
             this.Controls.Add(this.btn_startSearch);
             this.Controls.Add(this.groupBox1);
             this.Name = "Form1";
-            this.Text = "Form1";
+            this.Text = "Astar";
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
             this.ResumeLayout(false);
@@ -147,6 +174,9 @@
         private System.Windows.Forms.RadioButton radio_obstacle;
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.Button btn_deletePath;
+        private System.Windows.Forms.Panel pan_obstacle;
+        private System.Windows.Forms.Panel pan_goal;
+        private System.Windows.Forms.Panel pan_start;
     }
 }
 

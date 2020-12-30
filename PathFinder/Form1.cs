@@ -28,6 +28,9 @@ namespace PathFinderGUI
         {
             InitializeComponent();
             InitializeGridMaze();
+            pan_obstacle.BackColor = stateModeColorMap[CellStates.obstacle];
+            pan_start.BackColor = stateModeColorMap[CellStates.start];
+            pan_goal.BackColor = stateModeColorMap[CellStates.target];
             btn_deletePath.Enabled = false;
         }
 
