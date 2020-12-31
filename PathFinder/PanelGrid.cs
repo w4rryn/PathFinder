@@ -30,9 +30,9 @@ namespace PathFinder
         }
 
         public Panel[,] BoardCells { get; private set; }
-        
+
         public PanelGridContext Context { get; }
-        
+
         public Color GetCellColorByPosition(Vertex2D pos)
         {
             return BoardCells[pos.X, pos.Y].BackColor;
@@ -58,9 +58,8 @@ namespace PathFinder
             var node = new Vertex2D(x, y);
             var neighbours = GetLocationNeighbours(node);
             graph.AddNode(node);
-            var rand = new Random();
             foreach (var element in neighbours)
-                graph.AddNeighbour(node, new Node<Vertex2D>(element, 1)); //TODO: wieder normal machen
+                graph.AddNeighbour(node, new Node<Vertex2D>(element, 1));
         }
 
         public bool IsPositionOffGrid(Vertex2D pos)
