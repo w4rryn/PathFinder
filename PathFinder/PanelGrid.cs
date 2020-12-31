@@ -58,8 +58,9 @@ namespace PathFinder
             var node = new Vertex2D(x, y);
             var neighbours = GetLocationNeighbours(node);
             graph.AddNode(node);
+            var rand = new Random();
             foreach (var element in neighbours)
-                graph.AddNeighbour(node, new Node<Vertex2D>(element, 1));
+                graph.AddNeighbour(node, new Node<Vertex2D>(element, 1)); //TODO: wieder normal machen
         }
 
         public bool IsPositionOffGrid(Vertex2D pos)
@@ -126,9 +127,7 @@ namespace PathFinder
             {
                 var newPosition = location.Sum(dir);
                 if (IsPositionOnGrid(newPosition) && IsPositionNoWall(newPosition))
-                {
                     neighbours.Add(newPosition);
-                }
             }
 
             return neighbours;

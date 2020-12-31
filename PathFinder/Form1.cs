@@ -18,6 +18,7 @@ namespace PathFinderGUI
             {CellStates.obstacle, Color.Black },
             {CellStates.start, Color.Green },
             {CellStates.target, Color.Blue },
+            {CellStates.path, Color.Yellow },
         };
 
         private Vertex2D startCell = new Vertex2D(-1, -1);
@@ -28,9 +29,9 @@ namespace PathFinderGUI
         {
             InitializeComponent();
             InitializeGridMaze();
-            pan_obstacle.BackColor = stateModeColorMap[CellStates.obstacle];
-            pan_start.BackColor = stateModeColorMap[CellStates.start];
-            pan_goal.BackColor = stateModeColorMap[CellStates.target];
+            pan_obstacle.BackColor = GetCellColorByMode(CellStates.obstacle);
+            pan_start.BackColor = GetCellColorByMode(CellStates.start);
+            pan_goal.BackColor = GetCellColorByMode(CellStates.target);
             btn_deletePath.Enabled = false;
         }
 
@@ -51,12 +52,12 @@ namespace PathFinderGUI
 
         private bool CheckIfCellIsWall(Panel cell)
         {
-            return cell.BackColor == stateModeColorMap[CellStates.obstacle];
+            return cell.BackColor == GetCellColorByMode(CellStates.obstacle);
         }
 
         private enum CellStates
         {
-            empty, start, target, obstacle
+            empty, start, target, obstacle, path
         }
 
         private CellStates GetSelectedCellStateMode()
@@ -72,12 +73,12 @@ namespace PathFinderGUI
 
         private bool IsCellStartCell(Vertex2D cell)
         {
-            return gridMaze.GetCellColorByPosition(cell) == stateModeColorMap[CellStates.start];
+            return gridMaze.GetCellColorByPosition(cell) == GetCellColorByMode(CellStates.start);
         }
 
         private bool IsCellTargetCell(Vertex2D cell)
         {
-            return gridMaze.GetCellColorByPosition(cell) == stateModeColorMap[CellStates.target];
+            return gridMaze.GetCellColorByPosition(cell) == GetCellColorByMode(CellStates.target);
         }
 
         private bool IsRightClick(MouseEventArgs e)
@@ -104,14 +105,14 @@ namespace PathFinderGUI
 
         private void ResetCellColorAtPosition(Vertex2D pos)
         {
-            gridMaze.SetCellColorAtPosition(pos, stateModeColorMap[CellStates.empty]);
+            gridMaze.SetCellColorAtPosition(pos, GetCellColorByMode(CellStates.empty));
         }
 
         private void SetCellColorByMode(Vertex2D pos)
         {
             CellStates cellMode = GetSelectedCellStateMode();
             UpdateStartOrTargetByMode(pos, cellMode);
-            gridMaze.SetCellColorAtPosition(pos, stateModeColorMap[cellMode]);
+            gridMaze.SetCellColorAtPosition(pos, GetCellColorByMode(cellMode));
         }
 
         private void UpdateStartOrTargetByMode(Vertex2D pos, CellStates cellMode)
@@ -174,7 +175,7 @@ namespace PathFinderGUI
         private void RenderGeneratedPath()
         {
             foreach (var pos in foundPath)
-                gridMaze.SetCellColorAtPosition(pos, Color.Yellow);
+                gridMaze.SetCellColorAtPosition(pos, GetCellColorByMode(CellStates.path));
         }
 
         private int ManhattanDistanceHeuristic(Node<Vertex2D> currentLocation, Node<Vertex2D> goalLocation)
@@ -194,10 +195,17 @@ namespace PathFinderGUI
         {
             foreach (var cell in foundPath)
             {
-                gridMaze.SetCellColorAtPosition(cell, stateModeColorMap[CellStates.empty]);
+                if (gridMaze.GetCellColorByPosition(cell) == GetCellColorByMode(CellStates.path))
+                    gridMaze.SetCellColorAtPosition(cell, GetCellColorByMode(CellStates.empty));
             }
             btn_startSearch.Enabled = true;
             btn_deletePath.Enabled = false;
+            foundPath.Clear();
+        }
+
+        private Color GetCellColorByMode(CellStates state)
+        {
+            return stateModeColorMap[state];
         }
     }
 }
