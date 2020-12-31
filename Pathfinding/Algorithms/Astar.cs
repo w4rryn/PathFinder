@@ -29,7 +29,6 @@ namespace Pathfinding.Algorithms
                     return ReconstructPathWithNodeParents(currentNode);
                 EvaluateNeighbours(currentNode);
             }
-
             throw new NoPathFoundException("No valid path found");
         }
 
