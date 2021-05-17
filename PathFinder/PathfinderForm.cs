@@ -18,7 +18,7 @@ namespace PathFinderGUI
             {CellStates.Obstacle, Color.Black },
             {CellStates.Start, Color.Green },
             {CellStates.Target, Color.Blue },
-            {CellStates.Path, Color.Yellow },
+            {CellStates.Path, Color.Red },
         };
         private Vertex2D startCell = new Vertex2D(-1, -1);
         private Vertex2D targetCell = new Vertex2D(-1, -1);
